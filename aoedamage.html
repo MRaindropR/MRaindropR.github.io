@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOE伤害计算器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6db33f;
+            --background-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-color: #333333;
+            --accent-color: #ff7043;
+            --success-color: #66bb6a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .calculator {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header h1 i {
+            margin-right: 12px;
+            color: var(--accent-color);
+        }
+        
+        .formula {
+            background-color: rgba(74, 111, 165, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 20px 0;
+            line-height: 1.6;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        
+        .section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            background-color: #fcfcfc;
+        }
+        
+        .section-title {
+            margin-top: -30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title h3 {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .section-title h3 i {
+            margin-right: 8px;
+        }
+        
+        .attribute-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(109, 179, 63, 0.1);
+            border-radius: 8px;
+        }
+        
+        .stat-option {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            background-color: white;
+        }
+        
+        .stat-option i {
+            margin-right: 6px;
+        }
+        
+        .stat-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .input-field {
+            margin-bottom: 10px;
+        }
+        
+        .input-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 10px;
+            color: var(--primary-color);
+        }
+        
+        .input-field input[type="number"],
+        .input-field select {
+            width: 100%;
+            padding: 10px 10px 10px 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .input-field input[type="number"]:focus,
+        .input-field select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+            outline: none;
+        }
+        
+        .input-field.disabled input[type="number"] {
+            background-color: #f0f0f0;
+            border-color: #ddd;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        
+        .crit-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255, 112, 67, 0.1);
+            border-radius: 8px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+            margin: 0 15px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 26px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+        }
+        
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:hover {
+            background-color: #5a9e35;
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .result-section.active {
+            display: block;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .result-header {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-header i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        .damage-number {
+            font-size: 32px;
+            color: var(--accent-color);
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .calculation-details {
+            text-align: left;
+            background-color: rgba(74, 111, 165, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            font-size: 14px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .calculation-details h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .calculation-details p {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .calculation-details .final {
+            font-weight: bold;
+            color: var(--accent-color);
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .explanation {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .explanation h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .explanation h3 i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        .explanation ul {
+            padding-left: 20px;
+        }
+        
+        .explanation li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .explanation strong {
+            color: var(--primary-color);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .attribute-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-selector {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stat-option {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <div class="header">
+                <h1><i class="fas fa-fire-alt"></i> AOE伤害计算器</h1>
+                <p>精确计算游戏中的技能伤害</p>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">
+                    <h3><i class="fas fa-user-shield"></i> 属性选择</h3>
+                </div>
+                
+                <div class="stat-selector">
+                    <div class="stat-option active" id="attack-option" onclick="switchStat('attack')">
+                        <i class="fas fa-fist-raised"></i> 物理攻击
+                    </div>
+                    <div class="stat-option" id="intelligence-option" onclick="switchStat('intelligence')">
+                        <i class="fas fa-brain"></i> 魔法攻击
+                    </div>
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field" id="attack-field">
+                        <label for="attack">攻击</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-fist-raised"></i>
+                            <input type="number" id="attack" value="0" onchange="updateStats('attack')">
+                        </div>
+                    </div>
+                    <div class="input-field disabled" id="intelligence-field">
+                        <label for="intelligence">智力</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hat-wizard"></i>
+                            <input type="number" id="intelligence" value="0" onchange="updateStats('intelligence')">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="countering">克制系数</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-balance-scale"></i>
+                            <input type="number" id="countering" value="0" step="0.1" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field" id="defense-field">
+                        <label for="defense">防御</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-shield-alt"></i>
+                            <input type="number" id="defense" value="0">
+                        </div>
+                    </div>
+                    <div class="input-field disabled" id="magicResist-field">
+                        <label for="magicResist">魔防</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-gem"></i>
+                            <input type="number" id="magicResist" value="0">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="skillMultiplier">技能倍数</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-bolt"></i>
+                            <input type="number" id="skillMultiplier" value="0" step="0.1" min="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">
+                    <h3><i class="fas fa-percent"></i> 增减伤系数</h3>
+                </div>
+                
+                <div style="background-color: rgba(255, 112, 67, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: 500;">
+                    <i class="fas fa-info-circle"></i> 注意：所有增减伤数值均填写百分比，例如20代表20%
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field">
+                        <label for="typeAIncrease">A类增伤（普通增伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-up"></i>
+                            <input type="number" id="typeAIncrease" value="0" step="1">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="typeADecrease">A类减伤（普通减伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-down"></i>
+                            <input type="number" id="typeADecrease" value="0" step="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field">
+                        <label for="typeBIncrease">B类增伤（范围增伤、技能增伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-up"></i>
+                            <input type="number" id="typeBIncrease" value="0" step="1">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="typeBDecrease">B类减伤（范围减伤、技能减伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-down"></i>
+                            <input type="number" id="typeBDecrease" value="0" step="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field">
+                        <label for="typeCIncrease">C类增伤（远程增伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-up"></i>
+                            <input type="number" id="typeCIncrease" value="0" step="1">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="typeCDecrease">C类减伤（远程减伤）</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-down"></i>
+                            <input type="number" id="typeCDecrease" value="0" step="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">
+                    <h3><i class="fas fa-meteor"></i> 暴击设置</h3>
+                </div>
+                
+                <div class="crit-toggle">
+                    <span class="toggle-label">不暴击</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="isCrit" onchange="updateCritUI()">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">暴击</span>
+                </div>
+                
+                <div class="attribute-group">
+                    <div class="input-field">
+                        <label for="critIncrease">暴击增伤</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-up"></i>
+                            <input type="number" id="critIncrease" value="0" step="1" class="crit-field" disabled>
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label for="critDecrease">暴击减伤</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-arrow-down"></i>
+                            <input type="number" id="critDecrease" value="0" step="1" class="crit-field" disabled>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="calculateDamage()">
+                    <i class="fas fa-calculator"></i> 计算伤害
+                </button>
+            </div>
+            
+            <div class="result-section" id="result-section">
+                <div class="result-header">
+                    <i class="fas fa-chart-line"></i> 伤害计算结果
+                </div>
+                <div class="damage-number" id="damage-value">0</div>
+                <div class="calculation-details" id="calculation-details"></div>
+            </div>
+        </div>
+        
+        <div class="calculator" style="margin-top: 20px;">
+            <div class="section">
+                <div class="section-title">
+                    <h3><i class="fas fa-book"></i> 克制系数参考</h3>
+                </div>
+                
+                <div style="background-color: rgba(74, 111, 165, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid var(--primary-color);">
+                    <h4 style="margin-top: 0; color: var(--primary-color); margin-bottom: 10px;">职业克制系数：</h4>
+                    <ul style="list-style-type: none; padding-left: 5px; columns: 2;">
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 步克枪：1.4</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 枪克骑：1.3</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 骑克步：1.2</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 弓克飞：1.3</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 僧克魔：1.8</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 枪打步：0.8</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 步打骑：0.7</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 骑打枪：0.7</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 魔打僧：0.6</li>
+                    </ul>
+                    
+                    <h4 style="color: var(--primary-color); margin-bottom: 10px; margin-top: 15px;">装备克制系数：</h4>
+                    <ul style="list-style-type: none; padding-left: 5px;">
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 审判、屠马、屠龙：1.12</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 十字架：1.2</li>
+                    </ul>
+                    
+                    <h4 style="color: var(--primary-color); margin-bottom: 10px; margin-top: 15px;">技能克制系数：</h4>
+                    <ul style="list-style-type: none; padding-left: 5px;">
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 除魔力震荡僧侣：1.5</li>
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 其余基本：1.3</li>
+                    </ul>
+                    
+                    <h4 style="color: var(--primary-color); margin-bottom: 10px; margin-top: 15px;">超绝克制系数：</h4>
+                    <ul style="list-style-type: none; padding-left: 5px;">
+                        <li><i class="fas fa-angle-right" style="color: var(--accent-color);"></i> 兰迪新超绝：1.04</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center; padding: 15px; border-top: 1px solid #ddd; color: #777; font-size: 14px;">
+            © 2025 AOE伤害计算器 - 由无境丶黄昏乐章制作
+        </div>
+    </div>
+
+    <script>
+        // 初始化页面时设置暴击相关UI
+        window.onload = function() {
+            updateCritUI();
+        };
+        
+        // 切换物理/魔法攻击类型
+        function switchStat(type) {
+            if (type === 'attack') {
+                document.getElementById('attack-option').classList.add('active');
+                document.getElementById('intelligence-option').classList.remove('active');
+                
+                document.getElementById('attack-field').classList.remove('disabled');
+                document.getElementById('intelligence-field').classList.add('disabled');
+                document.getElementById('defense-field').classList.remove('disabled');
+                document.getElementById('magicResist-field').classList.add('disabled');
+                
+                document.getElementById('intelligence').value = 0;
+                document.getElementById('magicResist').value = 0;
+            } else {
+                document.getElementById('intelligence-option').classList.add('active');
+                document.getElementById('attack-option').classList.remove('active');
+                
+                document.getElementById('intelligence-field').classList.remove('disabled');
+                document.getElementById('attack-field').classList.add('disabled');
+                document.getElementById('magicResist-field').classList.remove('disabled');
+                document.getElementById('defense-field').classList.add('disabled');
+                
+                document.getElementById('attack').value = 0;
+                document.getElementById('defense').value = 0;
+            }
+        }
+        
+        // 根据用户输入更新相关字段
+        function updateStats(field) {
+            if (field === 'attack' && parseFloat(document.getElementById('attack').value) > 0) {
+                document.getElementById('intelligence').value = 0;
+                document.getElementById('magicResist').value = 0;
+                switchStat('attack');
+            } else if (field === 'intelligence' && parseFloat(document.getElementById('intelligence').value) > 0) {
+                document.getElementById('attack').value = 0;
+                document.getElementById('defense').value = 0;
+                switchStat('intelligence');
+            }
+        }
+        
+        // 更新暴击字段的启用/禁用状态
+        function updateCritUI() {
+            const isCrit = document.getElementById('isCrit').checked;
+            const critFields = document.querySelectorAll('.crit-field');
+            
+            critFields.forEach(field => {
+                field.disabled = !isCrit;
+                if (!isCrit) {
+                    field.style.backgroundColor = '#f0f0f0';
+                } else {
+                    field.style.backgroundColor = 'white';
+                }
+            });
+        }
+    
+        function calculateDamage() {
+            // 获取所有输入值
+            const attack = parseFloat(document.getElementById('attack').value) || 0;
+            const intelligence = parseFloat(document.getElementById('intelligence').value) || 0;
+            const countering = parseFloat(document.getElementById('countering').value) || 1;
+            const defense = parseFloat(document.getElementById('defense').value) || 0;
+            const magicResist = parseFloat(document.getElementById('magicResist').value) || 0;
+            const skillMultiplier = parseFloat(document.getElementById('skillMultiplier').value) || 1;
+            
+            // 获取百分比值并转换为小数
+            const typeAIncrease = (parseFloat(document.getElementById('typeAIncrease').value) || 0) / 100;
+            const typeADecrease = (parseFloat(document.getElementById('typeADecrease').value) || 0) / 100;
+            const typeBIncrease = (parseFloat(document.getElementById('typeBIncrease').value) || 0) / 100;
+            const typeBDecrease = (parseFloat(document.getElementById('typeBDecrease').value) || 0) / 100;
+            const typeCIncrease = (parseFloat(document.getElementById('typeCIncrease').value) || 0) / 100;
+            const typeCDecrease = (parseFloat(document.getElementById('typeCDecrease').value) || 0) / 100;
+            
+            const isCrit = document.getElementById('isCrit').checked;
+            let critMultiplier = 1.0; // 默认不暴击
+            let critIncreaseValue = 0;
+            let critDecreaseValue = 0;
+            
+            if (isCrit) {
+                critIncreaseValue = (parseFloat(document.getElementById('critIncrease').value) || 0) / 100;
+                critDecreaseValue = (parseFloat(document.getElementById('critDecrease').value) || 0) / 100;
+                critMultiplier = (1.3 + critIncreaseValue - critDecreaseValue);
+            }
+            
+            // 计算基础伤害
+            let baseDamage;
+            let damageSource = '';
+            let defenseSource = '';
+            
+            if (attack > 0) {
+                baseDamage = (attack * countering - defense) * skillMultiplier * 10;
+                damageSource = `攻击(${attack})`;
+                defenseSource = `防御(${defense})`;
+            } else {
+                baseDamage = (intelligence * countering - magicResist) * skillMultiplier * 10;
+                damageSource = `智力(${intelligence})`;
+                defenseSource = `魔防(${magicResist})`;
+            }
+            
+            const typeAMultiplier = (1 + typeAIncrease - typeADecrease);
+            const typeBMultiplier = (1 + typeBIncrease - typeBDecrease);
+            const typeCMultiplier = (1 + typeCIncrease - typeCDecrease);
+            
+            const finalDamage = baseDamage * typeAMultiplier * typeBMultiplier * typeCMultiplier * critMultiplier;
+            
+            // 显示结果
+            document.getElementById('damage-value').textContent = Math.max(0, Math.round(finalDamage));
+            document.getElementById('result-section').classList.add('active');
+            
+            // 显示详细计算过程
+            let critDescription = isCrit ? 
+                `暴击系数 = (1.3 + ${critIncreaseValue} - ${critDecreaseValue})` : 
+                `暴击系数 = 1.0 (未暴击)`;
+                
+            const detailHTML = `
+                <h4>计算过程详解：</h4>
+                <p>基础伤害 = (${damageSource} * ${countering} - ${defenseSource}) * ${skillMultiplier} * 10 = ${baseDamage.toFixed(2)}</p>
+                <p>A类系数 = (1 + ${typeAIncrease * 100}% - ${typeADecrease * 100}%) = ${typeAMultiplier.toFixed(2)}</p>
+                <p>B类系数 = (1 + ${typeBIncrease * 100}% - ${typeBDecrease * 100}%) = ${typeBMultiplier.toFixed(2)}</p>
+                <p>C类系数 = (1 + ${typeCIncrease * 100}% - ${typeCDecrease * 100}%) = ${typeCMultiplier.toFixed(2)}</p>
+                <p>${critDescription.replace(/(\d+\.\d+)/g, match => (parseFloat(match) * 100) + '%')} = ${critMultiplier.toFixed(2)}</p>
+                <p class="final">最终伤害 = ${baseDamage.toFixed(2)} * ${typeAMultiplier.toFixed(2)} * ${typeBMultiplier.toFixed(2)} * ${typeCMultiplier.toFixed(2)} * ${critMultiplier.toFixed(2)} = ${Math.max(0, Math.round(finalDamage))}</p>
+            `;
+            
+            document.getElementById('calculation-details').innerHTML = detailHTML;
+            
+            // 滚动到结果区域
+            document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
