@@ -60,6 +60,15 @@
             font-size: 0.8rem;
         }
         
+        select {
+            width: 100%;
+            padding: 3px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
         th {
             background-color: #f2f2f2;
             font-weight: bold;
@@ -150,49 +159,36 @@
             text-align: center;
         }
         
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-        }
-        
-        .result-card {
-            background-color: white;
-            border-radius: 6px;
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 12px;
-            transition: transform 0.2s;
+            background-color: white;
         }
         
-        .result-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        .result-attribute {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: #1976d2;
+        .results-table th, .results-table td {
+            padding: 10px;
             text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
+            border: 1px solid #ddd;
         }
         
-        .result-value {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
+        .results-table th {
+            background-color: #1976d2;
+            color: white;
         }
         
-        .result-label {
-            color: #555;
+        .results-table tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
         
-        .result-number {
-            font-weight: bold;
-            color: #333;
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #666;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
         }
         
         /* 响应式布局 */
@@ -209,11 +205,6 @@
             input[type="number"] {
                 padding: 2px;
                 font-size: 0.7rem;
-            }
-            
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 10px;
             }
         }
     </style>
@@ -277,13 +268,17 @@
                         <td><input type="number" id="life-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="life-clothes-percent" value="10" min="0" max="15"></td>
                         <td><input type="number" id="life-hat-percent" value="0" min="0" max="15"></td>
-                        <td><input type="number" id="life-accessory-percent" value="7" min="0" max="15"></td>
+                        <td><input type="number" id="life-accessory-percent" value="7" min="0" max="10"></td>
                         <td><input type="number" id="life-weapon-add" value="80" min="0"></td>
                         <td><input type="number" id="life-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="life-hat-add" value="100" min="0"></td>
                         <td><input type="number" id="life-accessory-add" value="0" min="0"></td>
                         <td><span id="life-combine-percent">17.0%</span></td>
-                        <td><input type="number" id="life-rgb" value="8.5" min="0" max="10" step="0.1"></td>
+                        <td><select id="life-rgb">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="10" selected>10%</option>
+                        </select></td>
                         <td><input type="number" id="life-artifact" value="40" min="0"></td>
                         <td><input type="number" id="life-mastery" value="5" min="0"></td>
                         <td><input type="number" id="life-inscription" value="0" min="0"></td>
@@ -292,7 +287,7 @@
                         <td><input type="number" id="life-clothes-skill" value="5" min="0"></td>
                         <td><input type="number" id="life-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="life-accessory-skill" value="0" min="0"></td>
-                        <td><input type="number" id="life-skill" value="5" min="0"></td>
+                        <td><input type="number" id="life-skill" value="40" min="0"></td>
                         <td><input type="number" id="life-talent" value="10" min="0"></td>
                     </tr>
                     <tr>
@@ -305,13 +300,17 @@
                         <td><input type="number" id="attack-weapon-percent" value="15" min="0" max="15"></td>
                         <td><input type="number" id="attack-clothes-percent" value="4" min="0" max="15"></td>
                         <td><input type="number" id="attack-hat-percent" value="3" min="0" max="15"></td>
-                        <td><input type="number" id="attack-accessory-percent" value="7" min="0" max="15"></td>
+                        <td><input type="number" id="attack-accessory-percent" value="7" min="0" max="10"></td>
                         <td><input type="number" id="attack-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="attack-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="attack-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="attack-accessory-add" value="0" min="0"></td>
                         <td><span id="attack-combine-percent">29.0%</span></td>
-                        <td><input type="number" id="attack-rgb" value="6.0" min="0" max="10" step="0.1"></td>
+                        <td><select id="attack-rgb">
+                            <option value="0">0%</option>
+                            <option value="5" selected>5%</option>
+                            <option value="10">10%</option>
+                        </select></td>
                         <td><input type="number" id="attack-artifact" value="20" min="0"></td>
                         <td><input type="number" id="attack-mastery" value="5" min="0"></td>
                         <td><input type="number" id="attack-inscription" value="0" min="0"></td>
@@ -320,7 +319,7 @@
                         <td><input type="number" id="attack-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="attack-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="attack-accessory-skill" value="0" min="0"></td>
-                        <td><input type="number" id="attack-skill" value="5" min="0"></td>
+                        <td><input type="number" id="attack-skill" value="20" min="0"></td>
                         <td><input type="number" id="attack-talent" value="10" min="0"></td>
                     </tr>
                     <tr>
@@ -333,13 +332,17 @@
                         <td><input type="number" id="intel-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="intel-clothes-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="intel-hat-percent" value="0" min="0" max="15"></td>
-                        <td><input type="number" id="intel-accessory-percent" value="0" min="0" max="15"></td>
+                        <td><input type="number" id="intel-accessory-percent" value="0" min="0" max="10"></td>
                         <td><input type="number" id="intel-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="intel-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="intel-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="intel-accessory-add" value="0" min="0"></td>
                         <td><span id="intel-combine-percent">0.0%</span></td>
-                        <td><input type="number" id="intel-rgb" value="0.0" min="0" max="10" step="0.1"></td>
+                        <td><select id="intel-rgb">
+                            <option value="0" selected>0%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                        </select></td>
                         <td><input type="number" id="intel-artifact" value="20" min="0"></td>
                         <td><input type="number" id="intel-mastery" value="0" min="0"></td>
                         <td><input type="number" id="intel-inscription" value="0" min="0"></td>
@@ -348,7 +351,7 @@
                         <td><input type="number" id="intel-clothes-skill" value="5" min="0"></td>
                         <td><input type="number" id="intel-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="intel-accessory-skill" value="0" min="0"></td>
-                        <td><input type="number" id="intel-skill" value="5" min="0"></td>
+                        <td><input type="number" id="intel-skill" value="20" min="0"></td>
                         <td><input type="number" id="intel-talent" value="0" min="0"></td>
                     </tr>
                     <tr>
@@ -361,13 +364,17 @@
                         <td><input type="number" id="defense-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="defense-clothes-percent" value="15" min="0" max="15"></td>
                         <td><input type="number" id="defense-hat-percent" value="10" min="0" max="15"></td>
-                        <td><input type="number" id="defense-accessory-percent" value="7" min="0" max="15"></td>
+                        <td><input type="number" id="defense-accessory-percent" value="7" min="0" max="10"></td>
                         <td><input type="number" id="defense-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="defense-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="defense-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="defense-accessory-add" value="0" min="0"></td>
                         <td><span id="defense-combine-percent">32.0%</span></td>
-                        <td><input type="number" id="defense-rgb" value="4.0" min="0" max="10" step="0.1"></td>
+                        <td><select id="defense-rgb">
+                            <option value="0">0%</option>
+                            <option value="5" selected>5%</option>
+                            <option value="10">10%</option>
+                        </select></td>
                         <td><input type="number" id="defense-artifact" value="20" min="0"></td>
                         <td><input type="number" id="defense-mastery" value="0" min="0"></td>
                         <td><input type="number" id="defense-inscription" value="0" min="0"></td>
@@ -376,7 +383,7 @@
                         <td><input type="number" id="defense-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="defense-hat-skill" value="5" min="0"></td>
                         <td><input type="number" id="defense-accessory-skill" value="0" min="0"></td>
-                        <td><input type="number" id="defense-skill" value="5" min="0"></td>
+                        <td><input type="number" id="defense-skill" value="20" min="0"></td>
                         <td><input type="number" id="defense-talent" value="10" min="0"></td>
                     </tr>
                     <tr>
@@ -389,13 +396,17 @@
                         <td><input type="number" id="mdefense-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="mdefense-clothes-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="mdefense-hat-percent" value="0" min="0" max="15"></td>
-                        <td><input type="number" id="mdefense-accessory-percent" value="0" min="0" max="15"></td>
+                        <td><input type="number" id="mdefense-accessory-percent" value="0" min="0" max="10"></td>
                         <td><input type="number" id="mdefense-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-accessory-add" value="0" min="0"></td>
                         <td><span id="mdefense-combine-percent">0.0%</span></td>
-                        <td><input type="number" id="mdefense-rgb" value="4.4" min="0" max="10" step="0.1"></td>
+                        <td><select id="mdefense-rgb">
+                            <option value="0">0%</option>
+                            <option value="5" selected>5%</option>
+                            <option value="10">10%</option>
+                        </select></td>
                         <td><input type="number" id="mdefense-artifact" value="20" min="0"></td>
                         <td><input type="number" id="mdefense-mastery" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-inscription" value="0" min="0"></td>
@@ -404,7 +415,7 @@
                         <td><input type="number" id="mdefense-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-accessory-skill" value="5" min="0"></td>
-                        <td><input type="number" id="mdefense-skill" value="5" min="0"></td>
+                        <td><input type="number" id="mdefense-skill" value="30" min="0"></td>
                         <td><input type="number" id="mdefense-talent" value="0" min="0"></td>
                     </tr>
                     <tr>
@@ -417,13 +428,17 @@
                         <td><input type="number" id="tech-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="tech-clothes-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="tech-hat-percent" value="0" min="0" max="15"></td>
-                        <td><input type="number" id="tech-accessory-percent" value="0" min="0" max="15"></td>
+                        <td><input type="number" id="tech-accessory-percent" value="0" min="0" max="10"></td>
                         <td><input type="number" id="tech-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="tech-clothes-add" value="0" min="0"></td>
                         <td><input type="number" id="tech-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="tech-accessory-add" value="0" min="0"></td>
                         <td><span id="tech-combine-percent">0.0%</span></td>
-                        <td><input type="number" id="tech-rgb" value="0.0" min="0" max="10" step="0.1"></td>
+                        <td><select id="tech-rgb">
+                            <option value="0" selected>0%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                        </select></td>
                         <td><input type="number" id="tech-artifact" value="0" min="0"></td>
                         <td><input type="number" id="tech-mastery" value="0" min="0"></td>
                         <td><input type="number" id="tech-inscription" value="0" min="0"></td>
@@ -432,18 +447,34 @@
                         <td><input type="number" id="tech-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-accessory-skill" value="5" min="0"></td>
-                        <td><input type="number" id="tech-skill" value="5" min="0"></td>
+                        <td><input type="number" id="tech-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-talent" value="0" min="0"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         
-        <button class="calculate-btn" onclick="calculateAll()">计算所有属性</button>
+      <button class="calculate-btn" id="calculate-button">计算所有属性</button>
         
         <div class="results-container">
             <div class="results-title">计算结果</div>
-            <div class="results-grid" id="results-summary"></div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>白字</th>
+                        <th>绿字</th>
+                        <th>战斗面板</th>
+                    </tr>
+                </thead>
+                <tbody id="results-tbody">
+                    <!-- 结果将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="copyright">
+            © 无境丶黄昏乐章 版权所有
         </div>
     </div>
     
@@ -563,30 +594,26 @@ function calculateAll() {
         const baseValue = document.getElementById(`${attr}-base`).value;
         
         resultsHTML += `
-        <div class="result-card">
-            <div class="result-attribute">${getAttributeName(attr)}</div>
-            <div class="result-value">
-                <span class="result-label">白字:</span>
-                <span class="result-number">${baseValue}</span>
-            </div>
-            <div class="result-value">
-                <span class="result-label">绿字:</span>
-                <span class="result-number">${greenValue}</span>
-            </div>
-            <div class="result-value">
-                <span class="result-label">面板值:</span>
-                <span class="result-number">${panelValue}</span>
-            </div>
-        </div>`;
+        <tr>
+            <td>${getAttributeName(attr)}</td>
+            <td>${baseValue}</td>
+            <td>${greenValue}</td>
+            <td>${panelValue}</td>
+        </tr>`;
     }
     
-    document.getElementById('results-summary').innerHTML = resultsHTML;
+    document.getElementById('results-tbody').innerHTML = resultsHTML;
 }
 
 // 为所有输入字段添加事件监听器
 window.onload = function() {
     // 初始计算
     calculateAll();
+    
+    // 绑定计算按钮点击事件
+    document.getElementById('calculate-button').addEventListener('click', function() {
+        calculateAll();
+    });
     
     // 为所有输入框添加变化监听
     document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -595,21 +622,25 @@ window.onload = function() {
                 this.value = 0;
             }
             
-            // 如果是附魔百分比字段且大于15%，限制为15%
-            if (this.id.includes('-percent') && !this.id.includes('combine-percent') && parseFloat(this.value) > 15) {
-                this.value = 15;
-            }
-            
-            // 如果是红黄蓝绿百分比且大于10%，限制为10%
-            if (this.id.includes('-rgb') && parseFloat(this.value) > 10) {
+            // 如果是饰品附魔百分比字段且大于10%，限制为10%
+            if (this.id.includes('accessory-percent') && parseFloat(this.value) > 10) {
                 this.value = 10;
+            }
+            // 如果是其他附魔百分比字段且大于15%，限制为15%
+            else if (this.id.includes('-percent') && !this.id.includes('accessory-percent') && !this.id.includes('combine-percent') && parseFloat(this.value) > 15) {
+                this.value = 15;
             }
             
             // 输入变化时自动重新计算
             calculateAll();
         });
     });
+    
+    // 为下拉选择框添加变化监听
+    document.querySelectorAll('select').forEach(select => {
+        select.addEventListener('change', function() {
+            calculateAll();
+        });
+    });
 };
 </script>
-</body>
-</html>
