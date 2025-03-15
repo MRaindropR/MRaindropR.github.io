@@ -206,12 +206,237 @@
                 padding: 2px;
                 font-size: 0.7rem;
             }
+            
+            /* 改进的结果表格响应式布局 */
+            .results-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .result-card {
+                background-color: white;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+                text-align: center;
+            }
+            
+            .result-attribute {
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin-bottom: 5px;
+                color: #1976d2;
+            }
+            
+            .result-values {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 8px;
+            }
+            
+            .result-value-label {
+                font-size: 0.7rem;
+                color: #666;
+            }
+            
+            .result-value {
+                font-size: 0.9rem;
+                font-weight: bold;
+            }
+            
+            .result-panel {
+                background-color: #e8f5e9;
+                border-radius: 4px;
+                padding: 5px;
+                margin-top: 8px;
+                font-weight: bold;
+                font-size: 1.1rem;
+                color: #2e7d32;
+            }
+            
+            /* 隐藏表格，显示卡片布局 */
+            .results-table-container {
+                display: block;
+            }
+            
+            .results-grid-container {
+                display: none;
+            }
+        }
+        
+        @media only screen and (max-width: 480px) {
+            /* 在小屏幕上隐藏表格，显示卡片布局 */
+            .results-table-container {
+                display: none;
+            }
+            
+            .results-grid-container {
+                display: block;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 新增下拉选择框样式 */
+        .equipment-selectors {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .selector-group {
+            flex: 1 1 200px;
+        }
+        
+        .selector-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .equipment-selector {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+        
+        /* 附魔类型颜色 */
+        .enchant-red {
+            background-color: #ffebee;
+            border-color: #e57373;
+            color: #c62828;
+        }
+        
+        .enchant-green {
+            background-color: #e8f5e9;
+            border-color: #81c784;
+            color: #2e7d32;
+        }
+        
+        .enchant-blue {
+            background-color: #e3f2fd;
+            border-color: #64b5f6;
+            color: #1565c0;
+        }
+        
+        .enchant-yellow {
+            background-color: #fffde7;
+            border-color: #fff176;
+            color: #f9a825;
+        }
+        
+        /* 下拉框颜色 */
+        select.enchant-red option {
+            background-color: white;
+            color: black;
+        }
+        
+        select.enchant-red {
+            background-color: #ffebee;
+            border-color: #e57373;
+            color: #c62828;
+        }
+        
+        select.enchant-green {
+            background-color: #e8f5e9;
+            border-color: #81c784;
+            color: #2e7d32;
+        }
+        
+        select.enchant-blue {
+            background-color: #e3f2fd;
+            border-color: #64b5f6;
+            color: #1565c0;
+        }
+        
+        select.enchant-yellow {
+            background-color: #fffde7;
+            border-color: #fff176;
+            color: #f9a825;
+        }
+        
+        /* 只读输入框样式 */
+        input[readonly] {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            cursor: not-allowed;
         }
     </style>
 </head>
+
 <body>
     <div class="calculator-container">
         <h1>角色属性计算器</h1>
+        
+        <!-- 装备和附魔类型选择区 -->
+        <div class="equipment-selectors">
+            <div class="selector-group">
+                <label class="selector-label" for="weapon-type">武器类型</label>
+                <select id="weapon-type" class="equipment-selector">
+                    <option value="none">-- 选择武器 --</option>
+                    <option value="heavy-sword">重剑 (生命+437 攻击+107)</option>
+                    <option value="light-sword">轻剑 (攻击+107 技巧+43)</option>
+                    <option value="axe">斧头 (生命+364 攻击+118)</option>
+                    <option value="spear">长枪 (生命+583 攻击+85)</option>
+                    <option value="hammer">物锤 (生命+583 攻击+85)</option>
+                    <option value="bow">弓箭 (攻击+107 技巧+43)</option>
+                    <option value="dagger">匕首 (攻击+96 技巧+53)</option>
+                    <option value="light-dagger">轻匕 (攻击+96 技巧+54)</option>
+                    <option value="staff">法杖 (生命+437 智力+107)</option>
+                    <option value="magic-hammer">法锤 (生命+583 智力+85)</option>
+                    <option value="dual-wield">双修 (攻击+107 智力+107)</option>
+                </select>
+            </div>
+            
+            <div class="selector-group">
+                <label class="selector-label" for="armor-type">衣服类型</label>
+                <select id="armor-type" class="equipment-selector">
+                    <option value="none">-- 选择衣服 --</option>
+                    <option value="heavy-armor">重甲 (生命+437 防御+65)</option>
+                    <option value="leather-armor">皮甲 (生命+509 防御+59)</option>
+                    <option value="cloth-armor">布甲 (生命+583 防御+54)</option>
+                </select>
+            </div>
+            
+            <div class="selector-group">
+                <label class="selector-label" for="helmet-type">头部类型</label>
+                <select id="helmet-type" class="equipment-selector">
+                    <option value="none">-- 选择头部 --</option>
+                    <option value="heavy-helmet">重头 (生命+583 防御+48)</option>
+                    <option value="leather-helmet">皮头 (生命+437 防御+59)</option>
+                    <option value="cloth-helmet">布头 (生命+364 防御+65)</option>
+                </select>
+            </div>
+            
+            <div class="selector-group">
+                <label class="selector-label" for="enchant-type">附魔类型</label>
+                <select id="enchant-type" class="equipment-selector">
+                    <option value="none">-- 选择附魔类型 --</option>
+                    <optgroup label="红色系列 (攻击/智力+5%)">
+                        <option value="red" class="enchant-red">红色系列 (轻风/满月/时钟/魔术/怒涛)</option>
+                    </optgroup>
+                    <optgroup label="绿色系列 (生命+10%)">
+                        <option value="green" class="enchant-green">绿色系列 (荆棘/钢铁/大树)</option>
+                    </optgroup>
+                    <optgroup label="蓝色系列 (防御/魔防+5%)">
+                        <option value="blue" class="enchant-blue">蓝色系列 (水晶/寒冰/顽石)</option>
+                    </optgroup>
+                    <optgroup label="黄色系列 (全属性+0%)">
+                        <option value="yellow" class="enchant-yellow">黄色系列 (流星/烈日)</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
         
         <div class="calculator-table">
             <table>
@@ -254,24 +479,25 @@
                         <th>头盔</th>
                         <th>饰品</th>
                         <th>职业技能%</th>
-                        <th>天赋/寄附%</th>
+                        <th>天赋/满月%</th>
                     </tr>
                 </thead>
-                <tbody>
+
+<tbody>
                     <tr>
                         <td class="attribute-name">生命</td>
                         <td><input type="number" id="life-base" value="4484" min="0"></td>
-                        <td><input type="number" id="life-weapon" value="364" min="0"></td>
-                        <td><input type="number" id="life-clothes" value="487" min="0"></td>
-                        <td><input type="number" id="life-hat" value="583" min="0"></td>
+                        <td><input type="number" id="life-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="life-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="life-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="life-accessory" value="0" min="0"></td>
                         <td><input type="number" id="life-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="life-clothes-percent" value="10" min="0" max="15"></td>
                         <td><input type="number" id="life-hat-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="life-accessory-percent" value="7" min="0" max="10"></td>
-                        <td><input type="number" id="life-weapon-add" value="80" min="0"></td>
+                        <td><input type="number" id="life-weapon-add" value="0" min="0"></td>
                         <td><input type="number" id="life-clothes-add" value="0" min="0"></td>
-                        <td><input type="number" id="life-hat-add" value="100" min="0"></td>
+                        <td><input type="number" id="life-hat-add" value="0" min="0"></td>
                         <td><input type="number" id="life-accessory-add" value="0" min="0"></td>
                         <td><span id="life-combine-percent">17.0%</span></td>
                         <td><select id="life-rgb">
@@ -279,12 +505,12 @@
                             <option value="5">5%</option>
                             <option value="10" selected>10%</option>
                         </select></td>
-                        <td><input type="number" id="life-artifact" value="40" min="0"></td>
-                        <td><input type="number" id="life-mastery" value="5" min="0"></td>
+                        <td><input type="number" id="life-artifact" value="0" min="0"></td>
+                        <td><input type="number" id="life-mastery" value="0" min="0"></td>
                         <td><input type="number" id="life-inscription" value="0" min="0"></td>
                         <td><input type="number" id="life-compete" value="0" min="0"></td>
                         <td><input type="number" id="life-weapon-skill" value="0" min="0"></td>
-                        <td><input type="number" id="life-clothes-skill" value="5" min="0"></td>
+                        <td><input type="number" id="life-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="life-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="life-accessory-skill" value="0" min="0"></td>
                         <td><input type="number" id="life-skill" value="40" min="0"></td>
@@ -293,9 +519,9 @@
                     <tr>
                         <td class="attribute-name">攻击</td>
                         <td><input type="number" id="attack-base" value="500" min="0"></td>
-                        <td><input type="number" id="attack-weapon" value="118" min="0"></td>
-                        <td><input type="number" id="attack-clothes" value="0" min="0"></td>
-                        <td><input type="number" id="attack-hat" value="0" min="0"></td>
+                        <td><input type="number" id="attack-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="attack-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="attack-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="attack-accessory" value="0" min="0"></td>
                         <td><input type="number" id="attack-weapon-percent" value="15" min="0" max="15"></td>
                         <td><input type="number" id="attack-clothes-percent" value="4" min="0" max="15"></td>
@@ -311,11 +537,11 @@
                             <option value="5" selected>5%</option>
                             <option value="10">10%</option>
                         </select></td>
-                        <td><input type="number" id="attack-artifact" value="20" min="0"></td>
-                        <td><input type="number" id="attack-mastery" value="5" min="0"></td>
+                        <td><input type="number" id="attack-artifact" value="0" min="0"></td>
+                        <td><input type="number" id="attack-mastery" value="0" min="0"></td>
                         <td><input type="number" id="attack-inscription" value="0" min="0"></td>
                         <td><input type="number" id="attack-compete" value="0" min="0"></td>
-                        <td><input type="number" id="attack-weapon-skill" value="5" min="0"></td>
+                        <td><input type="number" id="attack-weapon-skill" value="0" min="0"></td>
                         <td><input type="number" id="attack-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="attack-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="attack-accessory-skill" value="0" min="0"></td>
@@ -325,9 +551,9 @@
                     <tr>
                         <td class="attribute-name">智力</td>
                         <td><input type="number" id="intel-base" value="196" min="0"></td>
-                        <td><input type="number" id="intel-weapon" value="0" min="0"></td>
-                        <td><input type="number" id="intel-clothes" value="0" min="0"></td>
-                        <td><input type="number" id="intel-hat" value="0" min="0"></td>
+                        <td><input type="number" id="intel-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="intel-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="intel-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="intel-accessory" value="0" min="0"></td>
                         <td><input type="number" id="intel-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="intel-clothes-percent" value="0" min="0" max="15"></td>
@@ -343,12 +569,12 @@
                             <option value="5">5%</option>
                             <option value="10">10%</option>
                         </select></td>
-                        <td><input type="number" id="intel-artifact" value="20" min="0"></td>
+                        <td><input type="number" id="intel-artifact" value="0" min="0"></td>
                         <td><input type="number" id="intel-mastery" value="0" min="0"></td>
                         <td><input type="number" id="intel-inscription" value="0" min="0"></td>
                         <td><input type="number" id="intel-compete" value="0" min="0"></td>
                         <td><input type="number" id="intel-weapon-skill" value="0" min="0"></td>
-                        <td><input type="number" id="intel-clothes-skill" value="5" min="0"></td>
+                        <td><input type="number" id="intel-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="intel-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="intel-accessory-skill" value="0" min="0"></td>
                         <td><input type="number" id="intel-skill" value="20" min="0"></td>
@@ -357,9 +583,9 @@
                     <tr>
                         <td class="attribute-name">防御</td>
                         <td><input type="number" id="defense-base" value="367" min="0"></td>
-                        <td><input type="number" id="defense-weapon" value="0" min="0"></td>
-                        <td><input type="number" id="defense-clothes" value="65" min="0"></td>
-                        <td><input type="number" id="defense-hat" value="0" min="0"></td>
+                        <td><input type="number" id="defense-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="defense-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="defense-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="defense-accessory" value="48" min="0"></td>
                         <td><input type="number" id="defense-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="defense-clothes-percent" value="15" min="0" max="15"></td>
@@ -375,13 +601,13 @@
                             <option value="5" selected>5%</option>
                             <option value="10">10%</option>
                         </select></td>
-                        <td><input type="number" id="defense-artifact" value="20" min="0"></td>
+                        <td><input type="number" id="defense-artifact" value="0" min="0"></td>
                         <td><input type="number" id="defense-mastery" value="0" min="0"></td>
                         <td><input type="number" id="defense-inscription" value="0" min="0"></td>
                         <td><input type="number" id="defense-compete" value="0" min="0"></td>
                         <td><input type="number" id="defense-weapon-skill" value="0" min="0"></td>
                         <td><input type="number" id="defense-clothes-skill" value="0" min="0"></td>
-                        <td><input type="number" id="defense-hat-skill" value="5" min="0"></td>
+                        <td><input type="number" id="defense-hat-skill" value="0" min="0"></td>
                         <td><input type="number" id="defense-accessory-skill" value="0" min="0"></td>
                         <td><input type="number" id="defense-skill" value="20" min="0"></td>
                         <td><input type="number" id="defense-talent" value="10" min="0"></td>
@@ -389,9 +615,9 @@
                     <tr>
                         <td class="attribute-name">魔防</td>
                         <td><input type="number" id="mdefense-base" value="200" min="0"></td>
-                        <td><input type="number" id="mdefense-weapon" value="0" min="0"></td>
-                        <td><input type="number" id="mdefense-clothes" value="0" min="0"></td>
-                        <td><input type="number" id="mdefense-hat" value="48" min="0"></td>
+                        <td><input type="number" id="mdefense-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="mdefense-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="mdefense-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="mdefense-accessory" value="43" min="0"></td>
                         <td><input type="number" id="mdefense-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="mdefense-clothes-percent" value="0" min="0" max="15"></td>
@@ -407,23 +633,23 @@
                             <option value="5" selected>5%</option>
                             <option value="10">10%</option>
                         </select></td>
-                        <td><input type="number" id="mdefense-artifact" value="20" min="0"></td>
+                        <td><input type="number" id="mdefense-artifact" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-mastery" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-inscription" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-compete" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-weapon-skill" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-hat-skill" value="0" min="0"></td>
-                        <td><input type="number" id="mdefense-accessory-skill" value="5" min="0"></td>
+                        <td><input type="number" id="mdefense-accessory-skill" value="0" min="0"></td>
                         <td><input type="number" id="mdefense-skill" value="30" min="0"></td>
                         <td><input type="number" id="mdefense-talent" value="0" min="0"></td>
                     </tr>
                     <tr>
                         <td class="attribute-name">技巧</td>
                         <td><input type="number" id="tech-base" value="84" min="0"></td>
-                        <td><input type="number" id="tech-weapon" value="0" min="0"></td>
-                        <td><input type="number" id="tech-clothes" value="0" min="0"></td>
-                        <td><input type="number" id="tech-hat" value="0" min="0"></td>
+                        <td><input type="number" id="tech-weapon" value="0" min="0" readonly></td>
+                        <td><input type="number" id="tech-clothes" value="0" min="0" readonly></td>
+                        <td><input type="number" id="tech-hat" value="0" min="0" readonly></td>
                         <td><input type="number" id="tech-accessory" value="0" min="0"></td>
                         <td><input type="number" id="tech-weapon-percent" value="0" min="0" max="15"></td>
                         <td><input type="number" id="tech-clothes-percent" value="0" min="0" max="15"></td>
@@ -446,7 +672,7 @@
                         <td><input type="number" id="tech-weapon-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-clothes-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-hat-skill" value="0" min="0"></td>
-                        <td><input type="number" id="tech-accessory-skill" value="5" min="0"></td>
+                        <td><input type="number" id="tech-accessory-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-skill" value="0" min="0"></td>
                         <td><input type="number" id="tech-talent" value="0" min="0"></td>
                     </tr>
@@ -454,30 +680,41 @@
             </table>
         </div>
         
-      <button class="calculate-btn" id="calculate-button">计算所有属性</button>
+        <button class="calculate-btn" id="calculate-button">计算所有属性</button>
         
         <div class="results-container">
             <div class="results-title">计算结果</div>
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>属性</th>
-                        <th>白字</th>
-                        <th>绿字</th>
-                        <th>战斗面板</th>
-                    </tr>
-                </thead>
-                <tbody id="results-tbody">
+            
+            <!-- 表格布局 (在较大屏幕上显示) -->
+            <div class="results-table-container">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>属性</th>
+                            <th>白字</th>
+                            <th>绿字</th>
+                            <th>战斗面板</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-tbody">
+                        <!-- 结果将通过JavaScript填充 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 卡片布局 (在较小屏幕上显示) -->
+            <div class="results-grid-container">
+                <div class="results-grid" id="results-grid">
                     <!-- 结果将通过JavaScript填充 -->
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
         
         <div class="copyright">
             © 无境丶黄昏乐章 版权所有
         </div>
     </div>
-    
+
 <script>
 // 获取属性的中文名
 function getAttributeName(attr) {
@@ -490,6 +727,139 @@ function getAttributeName(attr) {
         'tech': '技巧'
     };
     return names[attr] || attr;
+}
+
+// 定义装备类型数据
+const equipmentData = {
+    // 武器类型及其属性
+    weapons: {
+        'none': { name: '无武器', values: {} },
+        'heavy-sword': { name: '重剑', values: { 'life': 437, 'attack': 107 } },
+        'light-sword': { name: '轻剑', values: { 'attack': 107, 'tech': 43 } },
+        'axe': { name: '斧头', values: { 'life': 364, 'attack': 118 } },
+        'spear': { name: '长枪', values: { 'life': 583, 'attack': 85 } },
+        'hammer': { name: '物锤', values: { 'life': 583, 'attack': 85 } },
+        'bow': { name: '弓箭', values: { 'attack': 107, 'tech': 43 } },
+        'dagger': { name: '匕首', values: { 'attack': 96, 'tech': 53 } },
+        'light-dagger': { name: '轻匕', values: { 'attack': 96, 'tech': 54 } },
+        'staff': { name: '法杖', values: { 'life': 437, 'intel': 107 } },
+        'magic-hammer': { name: '法锤', values: { 'life': 583, 'intel': 85 } },
+        'dual-wield': { name: '双修', values: { 'attack': 107, 'intel': 107 } }
+    },
+    
+    // 衣服类型及其属性
+    armors: {
+        'none': { name: '无衣服', values: {} },
+        'heavy-armor': { name: '重甲', values: { 'life': 437, 'defense': 65 } },
+        'leather-armor': { name: '皮甲', values: { 'life': 509, 'defense': 59 } },
+        'cloth-armor': { name: '布甲', values: { 'life': 583, 'defense': 54 } }
+    },
+    
+    // 头部类型及其属性
+    helmets: {
+        'none': { name: '无头部', values: {} },
+        'heavy-helmet': { name: '重头', values: { 'life': 583, 'defense': 48 } },
+        'leather-helmet': { name: '皮头', values: { 'life': 437, 'defense': 59 } },
+        'cloth-helmet': { name: '布头', values: { 'life': 364, 'defense': 65 } }
+    }
+};
+
+// 定义附魔类型选项
+const enchantData = {
+    'none': { name: '无附魔', values: { 'life': 0, 'attack': 0, 'intel': 0, 'defense': 0, 'mdefense': 0, 'tech': 0 } },
+    'red': { name: '红色系列', values: { 'attack': 5, 'intel': 5, 'life': 0, 'defense': 0, 'mdefense': 0, 'tech': 0 } },
+    'green': { name: '绿色系列', values: { 'life': 10, 'attack': 0, 'intel': 0, 'defense': 0, 'mdefense': 0, 'tech': 0 } },
+    'blue': { name: '蓝色系列', values: { 'defense': 5, 'mdefense': 5, 'life': 0, 'attack': 0, 'intel': 0, 'tech': 0 } },
+    'yellow': { name: '黄色系列', values: { 'life': 0, 'attack': 0, 'intel': 0, 'defense': 0, 'mdefense': 0, 'tech': 0 } }
+};
+
+// 应用武器属性
+function applyWeaponStats(weaponType) {
+    const weapon = equipmentData.weapons[weaponType] || equipmentData.weapons['none'];
+    const attributes = ['life', 'attack', 'intel', 'defense', 'mdefense', 'tech'];
+    
+    // 先清空所有武器属性
+    attributes.forEach(attr => {
+        document.getElementById(`${attr}-weapon`).value = 0;
+    });
+    
+    // 设置对应的属性值
+    for (const attr in weapon.values) {
+        document.getElementById(`${attr}-weapon`).value = weapon.values[attr];
+    }
+    
+    // 触发计算
+    calculateAll();
+}
+
+// 应用衣服属性
+function applyArmorStats(armorType) {
+    const armor = equipmentData.armors[armorType] || equipmentData.armors['none'];
+    const attributes = ['life', 'attack', 'intel', 'defense', 'mdefense', 'tech'];
+    
+    // 先清空所有衣服属性
+    attributes.forEach(attr => {
+        document.getElementById(`${attr}-clothes`).value = 0;
+    });
+    
+    // 设置对应的属性值
+    for (const attr in armor.values) {
+        document.getElementById(`${attr}-clothes`).value = armor.values[attr];
+    }
+    
+    // 触发计算
+    calculateAll();
+}
+
+// 应用头部属性
+function applyHelmetStats(helmetType) {
+    const helmet = equipmentData.helmets[helmetType] || equipmentData.helmets['none'];
+    const attributes = ['life', 'attack', 'intel', 'defense', 'mdefense', 'tech'];
+    
+    // 先清空所有头部属性
+    attributes.forEach(attr => {
+        document.getElementById(`${attr}-hat`).value = 0;
+    });
+    
+    // 设置对应的属性值
+    for (const attr in helmet.values) {
+        document.getElementById(`${attr}-hat`).value = helmet.values[attr];
+    }
+    
+    // 触发计算
+    calculateAll();
+}
+
+// 应用附魔类型
+function applyEnchantType(enchantType) {
+    const enchant = enchantData[enchantType] || enchantData['none'];
+    const attributes = ['life', 'attack', 'intel', 'defense', 'mdefense', 'tech'];
+    
+    // 设置所有属性的红黄蓝绿值
+    attributes.forEach(attr => {
+        const select = document.getElementById(`${attr}-rgb`);
+        select.value = enchant.values[attr];
+    });
+    
+    // 更新附魔选择框样式
+    const enchantSelect = document.getElementById('enchant-type');
+    
+    // 移除所有颜色类
+    enchantSelect.classList.remove('enchant-red', 'enchant-green', 'enchant-blue', 'enchant-yellow');
+    
+    // 添加对应的颜色类
+    if (enchantType === 'red') {
+        enchantSelect.classList.add('enchant-red');
+    } else if (enchantType === 'green') {
+        enchantSelect.classList.add('enchant-green');
+    } else if (enchantType === 'blue') {
+        enchantSelect.classList.add('enchant-blue');
+    } else if (enchantType === 'yellow') {
+        enchantSelect.classList.add('enchant-yellow');
+    }
+    
+    // 触发计算
+    calculateAll();
 }
 
 // 计算综合百分比（附魔水平）
@@ -542,7 +912,7 @@ function calculateGreenValue(attr) {
     const mastery = parseFloat(document.getElementById(`${attr}-mastery`).value) || 0;
     const inscription = parseFloat(document.getElementById(`${attr}-inscription`).value) || 0;
     
-    // 绿字 = 基础 + 白字*附魔百分比 + 附魔固定 + 白字*附魔类型 + 神器 + 精通 + 铸纹
+    // 绿字 = 基础装备 + 白字*附魔百分比 + 附魔固定 + 白字*附魔类型 + 神器 + 精通 + 铸纹
     const basicItems = weapon + clothes + hat + accessory;
     const enchantPercent = base * (weaponPercent + clothesPercent + hatPercent + accessoryPercent) / 100;
     const enchantFixed = weaponAdd + clothesAdd + hatAdd + accessoryAdd;
@@ -581,6 +951,7 @@ function calculatePanelValue(attr, greenValue) {
 function calculateAll() {
     const attributes = ['life', 'attack', 'intel', 'defense', 'mdefense', 'tech'];
     let resultsHTML = '';
+    let resultsGridHTML = '';
     
     for (const attr of attributes) {
         // 计算综合百分比
@@ -593,6 +964,7 @@ function calculateAll() {
         const panelValue = calculatePanelValue(attr, greenValue);
         const baseValue = document.getElementById(`${attr}-base`).value;
         
+        // 为表格添加行
         resultsHTML += `
         <tr>
             <td>${getAttributeName(attr)}</td>
@@ -600,15 +972,51 @@ function calculateAll() {
             <td>${greenValue}</td>
             <td>${panelValue}</td>
         </tr>`;
+        
+        // 为网格添加卡片
+        resultsGridHTML += `
+        <div class="result-card">
+            <div class="result-attribute">${getAttributeName(attr)}</div>
+            <div class="result-values">
+                <div>
+                    <div class="result-value-label">白字</div>
+                    <div class="result-value">${baseValue}</div>
+                </div>
+                <div>
+                    <div class="result-value-label">绿字</div>
+                    <div class="result-value">${greenValue}</div>
+                </div>
+            </div>
+            <div class="result-panel">${panelValue}</div>
+        </div>`;
     }
     
+    // 更新两个结果显示区域
     document.getElementById('results-tbody').innerHTML = resultsHTML;
+    document.getElementById('results-grid').innerHTML = resultsGridHTML;
 }
 
-// 为所有输入字段添加事件监听器
+// 初始化页面
 window.onload = function() {
     // 初始计算
     calculateAll();
+    
+    // 绑定装备选择事件
+    document.getElementById('weapon-type').addEventListener('change', function() {
+        applyWeaponStats(this.value);
+    });
+    
+    document.getElementById('armor-type').addEventListener('change', function() {
+        applyArmorStats(this.value);
+    });
+    
+    document.getElementById('helmet-type').addEventListener('change', function() {
+        applyHelmetStats(this.value);
+    });
+    
+    document.getElementById('enchant-type').addEventListener('change', function() {
+        applyEnchantType(this.value);
+    });
     
     // 绑定计算按钮点击事件
     document.getElementById('calculate-button').addEventListener('click', function() {
@@ -637,10 +1045,32 @@ window.onload = function() {
     });
     
     // 为下拉选择框添加变化监听
-    document.querySelectorAll('select').forEach(select => {
+    document.querySelectorAll('select:not([id^="weapon-type"]):not([id^="armor-type"]):not([id^="helmet-type"]):not([id^="enchant-type"])').forEach(select => {
         select.addEventListener('change', function() {
             calculateAll();
         });
     });
+    
+    // 检测设备宽度，根据屏幕大小调整显示
+    function checkScreenSize() {
+        const resultsTableContainer = document.querySelector('.results-table-container');
+        const resultsGridContainer = document.querySelector('.results-grid-container');
+        
+        if (window.innerWidth <= 480) {
+            resultsTableContainer.style.display = 'none';
+            resultsGridContainer.style.display = 'block';
+        } else {
+            resultsTableContainer.style.display = 'block';
+            resultsGridContainer.style.display = 'none';
+        }
+    }
+    
+    // 初始检查屏幕大小
+    checkScreenSize();
+    
+    // 当窗口大小改变时重新检查
+    window.addEventListener('resize', checkScreenSize);
 };
 </script>
+</body>
+</html>
