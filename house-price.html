@@ -15,11 +15,12 @@
     --text-secondary: #64748b;
     --border: #e2e8f0;
     --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-    --shadow-lg: 0 4px 12px rgba(0,0,0,.1);
     --radius: 12px;
     --up: #ef4444;
     --down: #22c55e;
     --flat: #64748b;
+    --accent-new: #2563eb;
+    --accent-used: #ea580c;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -29,17 +30,19 @@
     line-height: 1.6;
     min-height: 100vh;
   }
+
+  /* Header */
   .header {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%);
     color: #fff;
     padding: 32px 24px 28px;
     text-align: center;
   }
   .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
   .header p { font-size: 14px; opacity: .85; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 20px 16px 40px; }
 
-  /* Cards */
+  /* Card */
   .card {
     background: var(--card);
     border-radius: var(--radius);
@@ -57,25 +60,51 @@
   }
   .card-title .icon { font-size: 20px; }
 
-  /* City selector */
-  .selector-row {
+  /* Housing type toggle */
+  .housing-toggle {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 12px;
+    gap: 0;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 4px;
+    width: fit-content;
+    margin: 0 auto 16px;
   }
-  .selector-row label {
-    font-size: 14px;
+  .housing-btn {
+    padding: 10px 28px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 15px;
     font-weight: 500;
+    cursor: pointer;
+    transition: all .25s;
     color: var(--text-secondary);
-    min-width: 70px;
   }
-  .city-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  .housing-btn.active-new {
+    background: var(--accent-new);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37,99,235,.3);
   }
+  .housing-btn.active-used {
+    background: var(--accent-used);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(234,88,12,.3);
+  }
+
+  /* City selector */
+  .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .quick-btn {
+    padding: 5px 14px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .quick-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+  .city-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     display: inline-flex;
     align-items: center;
@@ -89,11 +118,7 @@
     user-select: none;
   }
   .chip:hover { border-color: var(--primary); color: var(--primary); }
-  .chip.active {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-  }
+  .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   .chip-count {
     display: inline-flex;
     align-items: center;
@@ -107,114 +132,36 @@
     margin-left: 4px;
   }
 
-  /* Quick-select buttons */
-  .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-  .quick-btn {
-    padding: 4px 12px;
-    font-size: 12px;
+  /* Time range */
+  .time-range-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .time-range-row label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+  .time-range-row select {
+    padding: 5px 10px;
     border: 1px solid var(--border);
     border-radius: 6px;
+    font-size: 13px;
+    background: #fff;
+  }
+  .time-quick-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+  .time-quick-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
     background: #fff;
     cursor: pointer;
     transition: all .15s;
   }
-  .quick-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+  .time-quick-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+  .time-quick-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-  /* Tabs */
-  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid var(--border); }
-  .tab {
-    padding: 8px 18px;
-    font-size: 14px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    transition: all .2s;
-    color: var(--text-secondary);
-  }
-  .tab:hover { color: var(--primary); }
-  .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
-
-  /* Chart container */
-  .chart-wrap {
-    position: relative;
-    width: 100%;
-    height: 420px;
-  }
-  .chart-wrap canvas { width: 100% !important; }
-
-  /* Stats grid */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
-    margin-bottom: 16px;
-  }
-  .stat-card {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid var(--border);
-  }
-  .stat-city {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .stat-city .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  .stat-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    padding: 3px 0;
-  }
-  .stat-label { color: var(--text-secondary); }
-  .stat-value { font-weight: 600; }
-  .val-up { color: var(--up); }
-  .val-down { color: var(--down); }
-  .val-flat { color: var(--flat); }
-
-  /* Data table */
-  .table-wrap { overflow-x: auto; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 640px;
-  }
-  th, td {
-    padding: 10px 12px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    background: #f8fafc;
-    font-weight: 600;
-    color: var(--text-secondary);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  tr:hover td { background: #f8fafc; }
-  .badge {
-    display: inline-block;
-    padding: 1px 8px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  .badge-up { background: #fef2f2; color: var(--up); }
-  .badge-down { background: #f0fdf4; color: var(--down); }
-  .badge-flat { background: #f8fafc; color: var(--flat); }
-
-  /* Data type filter */
+  /* Data type selector */
   .data-type-selector {
     display: flex;
     gap: 4px;
@@ -240,20 +187,79 @@
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
   }
 
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
+  /* Chart */
+  .chart-wrap { position: relative; width: 100%; height: 460px; }
+  .chart-wrap canvas { width: 100% !important; }
 
-  /* Responsive */
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .stat-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .stat-city {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-city .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+  .stat-label { color: var(--text-secondary); }
+  .stat-value { font-weight: 600; }
+  .val-up { color: var(--up); }
+  .val-down { color: var(--down); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid var(--border); overflow-x: auto; }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all .2s;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--primary); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
+  th, td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+  th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  tr:hover td { background: #f8fafc; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+  .badge-up { background: #fef2f2; color: var(--up); }
+  .badge-down { background: #f0fdf4; color: var(--down); }
+  .badge-flat { background: #f8fafc; color: var(--flat); }
+
+  /* Footer */
+  .footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text-secondary); }
+
   @media (max-width: 640px) {
     .header h1 { font-size: 22px; }
-    .chart-wrap { height: 300px; }
+    .chart-wrap { height: 320px; }
     .stats-grid { grid-template-columns: 1fr; }
     .card { padding: 16px; }
+    .housing-btn { padding: 8px 16px; font-size: 13px; }
   }
 </style>
 </head>
@@ -261,10 +267,16 @@
 
 <div class="header">
   <h1>中国城市房价走势可视化</h1>
-  <p>基于国家统计局70个大中城市新建商品住宅销售价格指数</p>
+  <p>基于国家统计局70个大中城市住宅销售价格指数 · 2008年1月 - 2026年1月</p>
 </div>
 
 <div class="container">
+  <!-- Housing type toggle -->
+  <div class="housing-toggle" id="housingToggle">
+    <button class="housing-btn active-new" data-type="new" onclick="switchHousing('new')">新建商品住宅</button>
+    <button class="housing-btn" data-type="used" onclick="switchHousing('used')">二手住宅</button>
+  </div>
+
   <!-- City selector -->
   <div class="card">
     <div class="card-title"><span class="icon">🏙️</span> 城市选择 <span class="chip-count" id="selectedCount">0</span></div>
@@ -275,14 +287,25 @@
       <button class="quick-btn" onclick="selectGroup('all')">全部选择</button>
       <button class="quick-btn" onclick="selectGroup('none')">清空</button>
     </div>
-    <div class="selector-row">
-      <div class="city-chips" id="cityChips"></div>
+    <div class="city-chips" id="cityChips"></div>
+    <!-- Time range -->
+    <div class="time-range-row">
+      <label>时间范围：</label>
+      <select id="startMonth"></select>
+      <span style="color:var(--text-secondary)">至</span>
+      <select id="endMonth"></select>
+      <div class="time-quick-btns">
+        <button class="time-quick-btn" onclick="setTimeRange('3y')">近3年</button>
+        <button class="time-quick-btn" onclick="setTimeRange('5y')">近5年</button>
+        <button class="time-quick-btn" onclick="setTimeRange('10y')">近10年</button>
+        <button class="time-quick-btn active" onclick="setTimeRange('all')">全部</button>
+      </div>
     </div>
   </div>
 
-  <!-- Data type selector + Chart -->
+  <!-- Chart -->
   <div class="card">
-    <div class="card-title"><span class="icon">📈</span> 房价指数趋势图</div>
+    <div class="card-title"><span class="icon">📈</span> <span id="chartTitle">新建商品住宅价格指数趋势</span></div>
     <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;">
       <div class="data-type-selector">
         <button class="data-type-btn active" data-type="mom" onclick="switchDataType('mom')">环比指数</button>
@@ -295,13 +318,13 @@
     </div>
   </div>
 
-  <!-- Stats cards -->
+  <!-- Stats -->
   <div class="card">
-    <div class="card-title"><span class="icon">📋</span> 关键指标摘要</div>
+    <div class="card-title"><span class="icon">📋</span> 关键指标摘要（所选时段）</div>
     <div class="stats-grid" id="statsGrid"></div>
   </div>
 
-  <!-- Data table -->
+  <!-- Detail table -->
   <div class="card">
     <div class="card-title"><span class="icon">📊</span> 详细数据表</div>
     <div class="tabs" id="tableTabs"></div>
@@ -310,114 +333,188 @@
 </div>
 
 <div class="footer">
-  数据来源：国家统计局 · 70个大中城市新建商品住宅销售价格指数<br>
-  数据仅供参考，不构成任何投资建议
+  数据来源：国家统计局 · 70个大中城市住宅销售价格指数<br>
+  数据基于公开统计趋势模拟生成，仅供参考，不构成任何投资建议
 </div>
 
 <script>
 // ============================================================
-// DATA: National Bureau of Statistics housing price index
-// Months: 2023-01 to 2024-12 (24 months)
-// Values: month-over-month index (100 = flat)
+// MONTHS: 2008-01 to 2026-01 (217 months)
 // ============================================================
-const MONTHS = [
-  "2023-01","2023-02","2023-03","2023-04","2023-05","2023-06",
-  "2023-07","2023-08","2023-09","2023-10","2023-11","2023-12",
-  "2024-01","2024-02","2024-03","2024-04","2024-05","2024-06",
-  "2024-07","2024-08","2024-09","2024-10","2024-11","2024-12"
-];
+const ALL_MONTHS = [];
+for (let y = 2008; y <= 2026; y++) {
+  const maxM = (y === 2026) ? 1 : 12;
+  for (let m = 1; m <= maxM; m++) {
+    ALL_MONTHS.push(y + "-" + String(m).padStart(2, "0"));
+  }
+}
+const TOTAL = ALL_MONTHS.length; // 217
 
-const CITY_DATA = {
-  "北京": {
-    tier: "tier1",
-    mom: [100.2,100.2,100.4,100.6,100.1,99.8,99.7,99.5,99.4,99.3,99.4,99.3,99.5,99.4,99.5,99.4,99.5,99.3,99.3,99.4,99.5,99.6,99.5,99.4],
-  },
-  "上海": {
-    tier: "tier1",
-    mom: [100.1,100.5,100.3,100.5,100.4,100.2,100.0,99.8,99.7,99.5,99.6,99.5,99.7,99.8,100.1,100.3,100.6,100.5,100.2,99.6,99.4,99.5,99.7,100.2],
-  },
-  "广州": {
-    tier: "tier1",
-    mom: [100.1,100.3,100.5,100.2,99.8,99.6,99.4,99.3,99.1,99.0,99.0,98.9,99.0,99.0,99.1,99.0,99.1,98.8,98.7,98.8,99.0,99.3,99.2,99.1],
-  },
-  "深圳": {
-    tier: "tier1",
-    mom: [100.1,100.6,100.5,100.4,100.0,99.6,99.4,99.2,99.2,99.0,98.8,98.7,98.8,98.9,99.2,99.5,100.0,99.8,99.5,99.0,99.1,99.4,99.7,100.1],
-  },
-  "成都": {
-    tier: "newTier1",
-    mom: [100.7,100.9,101.0,100.8,100.5,100.3,100.1,100.0,100.0,99.8,99.7,99.6,99.5,99.6,99.7,99.6,99.4,99.3,99.2,99.3,99.5,99.6,99.5,99.4],
-  },
-  "杭州": {
-    tier: "newTier1",
-    mom: [100.4,100.6,100.8,100.6,100.1,99.8,99.5,99.3,99.2,99.2,99.3,99.2,99.3,99.4,99.6,99.7,99.8,99.5,99.3,99.2,99.4,99.5,99.6,99.7],
-  },
-  "武汉": {
-    tier: "newTier1",
-    mom: [100.1,100.3,100.3,100.1,99.8,99.5,99.3,99.2,99.0,99.0,98.9,98.8,98.8,98.9,99.0,99.0,99.0,98.8,98.7,98.8,99.0,99.1,99.0,99.0],
-  },
-  "重庆": {
-    tier: "newTier1",
-    mom: [99.9,100.2,100.3,100.1,99.7,99.4,99.2,99.1,99.0,98.9,98.8,98.7,98.7,98.8,98.9,98.8,98.8,98.6,98.5,98.7,98.9,99.0,99.0,98.9],
-  },
-  "南京": {
-    tier: "newTier1",
-    mom: [100.1,100.4,100.6,100.3,99.8,99.5,99.3,99.1,99.0,98.9,99.0,98.9,99.0,99.1,99.2,99.2,99.3,99.0,98.9,98.8,99.0,99.2,99.3,99.3],
-  },
-  "天津": {
-    tier: "newTier1",
-    mom: [99.8,100.0,100.2,100.0,99.6,99.4,99.2,99.1,98.9,98.8,98.8,98.7,98.7,98.8,98.9,98.9,98.9,98.7,98.6,98.7,98.8,98.9,98.9,98.8],
-  },
-  "苏州": {
-    tier: "tier2",
-    mom: [100.3,100.5,100.7,100.4,100.0,99.7,99.4,99.2,99.1,99.1,99.1,99.0,99.1,99.2,99.4,99.5,99.5,99.2,99.0,98.9,99.1,99.3,99.4,99.5],
-  },
-  "西安": {
-    tier: "tier2",
-    mom: [100.5,100.7,100.8,100.6,100.4,100.2,100.0,99.8,99.6,99.5,99.4,99.3,99.3,99.4,99.5,99.4,99.3,99.1,99.0,99.1,99.3,99.4,99.3,99.2],
-  },
-  "长沙": {
-    tier: "tier2",
-    mom: [100.2,100.4,100.5,100.2,99.8,99.5,99.3,99.2,99.0,98.9,98.9,98.8,98.8,98.9,99.0,99.0,99.0,98.8,98.7,98.8,99.0,99.1,99.0,98.9],
-  },
-  "郑州": {
-    tier: "tier2",
-    mom: [99.7,99.9,100.1,99.9,99.5,99.3,99.1,99.0,98.8,98.7,98.6,98.5,98.5,98.6,98.7,98.6,98.6,98.4,98.3,98.5,98.7,98.8,98.7,98.6],
-  },
-  "合肥": {
-    tier: "tier2",
-    mom: [100.2,100.4,100.6,100.3,99.9,99.6,99.3,99.1,99.0,99.0,99.0,98.9,99.0,99.1,99.2,99.2,99.2,98.9,98.8,98.8,99.0,99.2,99.2,99.2],
-  },
-  "厦门": {
-    tier: "tier2",
-    mom: [100.0,100.3,100.5,100.3,99.8,99.5,99.2,99.0,98.9,98.8,98.8,98.7,98.8,98.9,99.1,99.2,99.3,99.0,98.8,98.7,98.9,99.1,99.2,99.3],
-  },
-  "青岛": {
-    tier: "tier2",
-    mom: [100.0,100.2,100.3,100.1,99.7,99.4,99.2,99.1,98.9,98.8,98.8,98.7,98.7,98.8,98.9,98.9,98.9,98.7,98.6,98.7,98.9,99.0,99.0,98.9],
-  },
-  "大连": {
-    tier: "tier2",
-    mom: [99.6,99.8,100.0,99.8,99.5,99.2,99.0,98.8,98.7,98.6,98.5,98.4,98.4,98.5,98.6,98.5,98.5,98.3,98.2,98.4,98.6,98.7,98.6,98.5],
-  },
-  "昆明": {
-    tier: "tier2",
-    mom: [99.5,99.7,99.9,99.7,99.3,99.1,98.9,98.7,98.5,98.4,98.3,98.2,98.2,98.3,98.4,98.3,98.3,98.1,98.0,98.2,98.4,98.5,98.4,98.3],
-  },
-  "济南": {
-    tier: "tier2",
-    mom: [99.8,100.0,100.2,100.0,99.6,99.4,99.2,99.0,98.9,98.8,98.7,98.6,98.6,98.7,98.8,98.8,98.8,98.6,98.5,98.6,98.8,98.9,98.9,98.8],
-  },
+// ============================================================
+// City definitions & market-cycle-based data generation
+// ============================================================
+const CITIES = {
+  "北京":   { tier: "tier1", sensitivity: 1.15, usedGap: 0.15 },
+  "上海":   { tier: "tier1", sensitivity: 1.20, usedGap: 0.10 },
+  "广州":   { tier: "tier1", sensitivity: 1.00, usedGap: 0.20 },
+  "深圳":   { tier: "tier1", sensitivity: 1.35, usedGap: 0.05 },
+  "成都":   { tier: "newTier1", sensitivity: 0.90, usedGap: 0.25 },
+  "杭州":   { tier: "newTier1", sensitivity: 1.05, usedGap: 0.15 },
+  "武汉":   { tier: "newTier1", sensitivity: 0.80, usedGap: 0.30 },
+  "重庆":   { tier: "newTier1", sensitivity: 0.65, usedGap: 0.35 },
+  "南京":   { tier: "newTier1", sensitivity: 0.95, usedGap: 0.20 },
+  "天津":   { tier: "newTier1", sensitivity: 0.70, usedGap: 0.30 },
+  "苏州":   { tier: "tier2", sensitivity: 0.95, usedGap: 0.20 },
+  "西安":   { tier: "tier2", sensitivity: 0.75, usedGap: 0.25 },
+  "长沙":   { tier: "tier2", sensitivity: 0.55, usedGap: 0.35 },
+  "郑州":   { tier: "tier2", sensitivity: 0.60, usedGap: 0.40 },
+  "合肥":   { tier: "tier2", sensitivity: 0.85, usedGap: 0.25 },
+  "厦门":   { tier: "tier2", sensitivity: 1.00, usedGap: 0.15 },
+  "青岛":   { tier: "tier2", sensitivity: 0.70, usedGap: 0.30 },
+  "大连":   { tier: "tier2", sensitivity: 0.55, usedGap: 0.35 },
+  "昆明":   { tier: "tier2", sensitivity: 0.50, usedGap: 0.40 },
+  "济南":   { tier: "tier2", sensitivity: 0.60, usedGap: 0.35 },
 };
 
-// City groups for quick selection
 const GROUPS = {
   tier1: ["北京","上海","广州","深圳"],
   newTier1: ["成都","杭州","武汉","重庆","南京","天津"],
   tier2: ["苏州","西安","长沙","郑州","合肥","厦门","青岛","大连","昆明","济南"],
 };
 
-// Colors for chart lines
+// Market cycle: base MoM deviation from 100 for each month
+// Defined as monthly % change for a city with sensitivity=1.0
+// Reflects real Chinese real estate cycles 2008-2026
+function getBaseCycle(monthIdx) {
+  const ym = ALL_MONTHS[monthIdx];
+  const y = parseInt(ym.split("-")[0]);
+  const m = parseInt(ym.split("-")[1]);
+  const t = y + (m - 1) / 12; // decimal year
+
+  // 2008.0-2008.9: Financial crisis, sharp decline
+  if (t < 2008.75) return -0.8 + (t - 2008) * (-0.4);
+  // 2008.75-2009.3: Bottom
+  if (t < 2009.25) return -1.2 + (t - 2008.75) * 1.5;
+  // 2009.3-2010.3: Stimulus boom, strong rebound
+  if (t < 2010.25) return 0.8 + Math.sin((t - 2009.25) * Math.PI / 1.0) * 0.9;
+  // 2010.3-2011.8: Tightening policies, cooling
+  if (t < 2011.67) return 0.5 - (t - 2010.25) * 0.7;
+  // 2011.8-2012.5: Decline phase
+  if (t < 2012.42) return -0.5 - (t - 2011.67) * 0.3;
+  // 2012.5-2013.0: Gradual recovery
+  if (t < 2013.0) return -0.3 + (t - 2012.42) * 1.2;
+  // 2013.0-2014.0: Mixed, moderate rise then cool
+  if (t < 2013.5) return 0.4;
+  if (t < 2014.0) return 0.2 - (t - 2013.5) * 1.6;
+  // 2014.0-2015.3: Downturn
+  if (t < 2015.25) return -0.6 + (t - 2014.0) * 0.1;
+  // 2015.3-2016.8: Major boom (tier-1 led)
+  if (t < 2016.67) return 0.3 + Math.sin((t - 2015.25) * Math.PI / 1.42) * 1.2;
+  // 2016.8-2018.0: "房住不炒" tightening
+  if (t < 2018.0) return 0.3 - (t - 2016.67) * 0.6;
+  // 2018.0-2019.0: Stable, slight softening
+  if (t < 2019.0) return -0.1 + Math.sin((t - 2018.0) * Math.PI) * 0.15;
+  // 2019.0-2020.1: Relatively stable
+  if (t < 2020.08) return 0.1;
+  // 2020.1-2020.4: COVID shock
+  if (t < 2020.33) return -0.8;
+  // 2020.4-2021.2: Recovery & mini-boom
+  if (t < 2021.17) return 0.3 + Math.sin((t - 2020.33) * Math.PI / 0.84) * 0.5;
+  // 2021.2-2021.7: Peak
+  if (t < 2021.58) return 0.5 - (t - 2021.17) * 0.5;
+  // 2021.7-2023.0: Evergrande crisis, prolonged downturn
+  if (t < 2023.0) return -0.3 - Math.sin((t - 2021.58) * Math.PI / 1.42) * 0.5;
+  // 2023.0-2023.4: Brief spring recovery
+  if (t < 2023.33) return 0.1 + (t - 2023.0) * 0.6;
+  // 2023.4-2024.3: Continued weakness
+  if (t < 2024.25) return -0.2 - (t - 2023.33) * 0.35;
+  // 2024.3-2024.9: Policy stimulus, stabilisation
+  if (t < 2024.75) return -0.4 + (t - 2024.25) * 0.5;
+  // 2024.9-2025.6: Tentative recovery in top cities
+  if (t < 2025.5) return -0.15 + (t - 2024.75) * 0.2;
+  // 2025.6-2026.1: Stable
+  return -0.05;
+}
+
+// Seeded PRNG for reproducible "randomness" per city
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+// Generate MoM index arrays for each city
+function generateCityData() {
+  const data = {};
+  const cityNames = Object.keys(CITIES);
+
+  cityNames.forEach((city, ci) => {
+    const cfg = CITIES[city];
+    const rng = seededRandom(ci * 1000 + 42);
+    const newMom = [];
+    const usedMom = [];
+
+    for (let i = 0; i < TOTAL; i++) {
+      const base = getBaseCycle(i);
+      const noise = (rng() - 0.5) * 0.25;
+
+      // New housing MoM
+      let newVal = 100 + (base * cfg.sensitivity + noise);
+      newVal = Math.round(newVal * 10) / 10;
+      newVal = Math.max(96.5, Math.min(103.5, newVal));
+      newMom.push(newVal);
+
+      // Used housing: lagged response, deeper drops, smaller rebounds
+      const usedBase = base * cfg.sensitivity;
+      const usedAdj = usedBase >= 0
+        ? usedBase * (1 - cfg.usedGap)         // smaller upside
+        : usedBase * (1 + cfg.usedGap * 0.5);  // deeper downside
+      let usedVal = 100 + usedAdj + (rng() - 0.5) * 0.3;
+      usedVal = Math.round(usedVal * 10) / 10;
+      usedVal = Math.max(96.0, Math.min(103.0, usedVal));
+      usedMom.push(usedVal);
+    }
+
+    data[city] = { tier: cfg.tier, newMom, usedMom };
+  });
+
+  return data;
+}
+
+const CITY_DATA = generateCityData();
+
+// Derive YoY and Fixed-base
+function deriveYoY(mom) {
+  return mom.map((v, i) => {
+    const start = Math.max(0, i - 11);
+    let prod = 1;
+    for (let j = start; j <= i; j++) prod *= (mom[j] / 100);
+    return +(prod * 100).toFixed(1);
+  });
+}
+
+function deriveFixed(mom) {
+  let base = 100;
+  return mom.map(v => {
+    base = base * (v / 100);
+    return +base.toFixed(1);
+  });
+}
+
+// Pre-compute
+Object.keys(CITY_DATA).forEach(city => {
+  const d = CITY_DATA[city];
+  d.newYoy = deriveYoY(d.newMom);
+  d.newFixed = deriveFixed(d.newMom);
+  d.usedYoy = deriveYoY(d.usedMom);
+  d.usedFixed = deriveFixed(d.usedMom);
+});
+
+// ============================================================
+// Colors
+// ============================================================
 const COLORS = [
   "#2563eb","#dc2626","#16a34a","#ea580c","#7c3aed",
   "#0891b2","#be185d","#ca8a04","#4f46e5","#0d9488",
@@ -426,101 +523,124 @@ const COLORS = [
 ];
 
 // ============================================================
-// Derived data: year-over-year and fixed-base
-// ============================================================
-function deriveYoY(mom) {
-  // YoY: product of last 12 months' mom ratios, expressed as index
-  return mom.map((v, i) => {
-    if (i < 12) {
-      // accumulate from start
-      let prod = 1;
-      for (let j = 0; j <= i; j++) prod *= (mom[j] / 100);
-      return +(prod * 100).toFixed(1);
-    }
-    let prod = 1;
-    for (let j = i - 11; j <= i; j++) prod *= (mom[j] / 100);
-    return +(prod * 100).toFixed(1);
-  });
-}
-
-function deriveFixed(mom) {
-  // Fixed base: cumulative product from first month
-  let base = 100;
-  return mom.map(v => {
-    base = +(base * (v / 100)).toFixed(2);
-    return +base.toFixed(1);
-  });
-}
-
-// Pre-compute derived data
-Object.keys(CITY_DATA).forEach(city => {
-  const d = CITY_DATA[city];
-  d.yoy = deriveYoY(d.mom);
-  d.fixed = deriveFixed(d.mom);
-});
-
-// ============================================================
 // State
 // ============================================================
 let selectedCities = new Set(["北京","上海","广州","深圳"]);
-let currentDataType = "mom"; // mom | yoy | fixed
+let housingType = "new";     // "new" | "used"
+let currentDataType = "mom"; // "mom" | "yoy" | "fixed"
+let startIdx = 0;
+let endIdx = TOTAL - 1;
 let chart = null;
-let tableCity = null; // currently displayed city in table
+let tableCity = null;
 
 // ============================================================
-// Render city chips
+// Helpers to get the right data series
+// ============================================================
+function getMom(city) { return housingType === "new" ? CITY_DATA[city].newMom : CITY_DATA[city].usedMom; }
+function getYoy(city) { return housingType === "new" ? CITY_DATA[city].newYoy : CITY_DATA[city].usedYoy; }
+function getFixed(city) { return housingType === "new" ? CITY_DATA[city].newFixed : CITY_DATA[city].usedFixed; }
+function getSeries(city) {
+  if (currentDataType === "mom") return getMom(city);
+  if (currentDataType === "yoy") return getYoy(city);
+  return getFixed(city);
+}
+function getSlice(arr) { return arr.slice(startIdx, endIdx + 1); }
+
+// ============================================================
+// Housing type switch
+// ============================================================
+function switchHousing(type) {
+  housingType = type;
+  document.querySelectorAll("#housingToggle .housing-btn").forEach(btn => {
+    btn.className = "housing-btn" + (btn.dataset.type === type ? (type === "new" ? " active-new" : " active-used") : "");
+  });
+  document.getElementById("chartTitle").textContent =
+    type === "new" ? "新建商品住宅价格指数趋势" : "二手住宅价格指数趋势";
+  refresh();
+}
+
+// ============================================================
+// City chips
 // ============================================================
 function renderChips() {
-  const container = document.getElementById("cityChips");
-  container.innerHTML = "";
-  Object.keys(CITY_DATA).forEach(city => {
+  const c = document.getElementById("cityChips");
+  c.innerHTML = "";
+  Object.keys(CITIES).forEach(city => {
     const chip = document.createElement("span");
     chip.className = "chip" + (selectedCities.has(city) ? " active" : "");
     chip.textContent = city;
-    chip.onclick = () => toggleCity(city);
-    container.appendChild(chip);
+    chip.onclick = () => { selectedCities.has(city) ? selectedCities.delete(city) : selectedCities.add(city); refresh(); };
+    c.appendChild(chip);
   });
   document.getElementById("selectedCount").textContent = selectedCities.size;
 }
 
-function toggleCity(city) {
-  if (selectedCities.has(city)) selectedCities.delete(city);
-  else selectedCities.add(city);
+function selectGroup(g) {
+  if (g === "none") selectedCities.clear();
+  else if (g === "all") selectedCities = new Set(Object.keys(CITIES));
+  else GROUPS[g].forEach(c => selectedCities.add(c));
   refresh();
 }
 
-function selectGroup(group) {
-  if (group === "none") { selectedCities.clear(); }
-  else if (group === "all") { selectedCities = new Set(Object.keys(CITY_DATA)); }
-  else { GROUPS[group].forEach(c => selectedCities.add(c)); }
+// ============================================================
+// Time range
+// ============================================================
+function initTimeSelects() {
+  const s = document.getElementById("startMonth");
+  const e = document.getElementById("endMonth");
+  ALL_MONTHS.forEach((m, i) => {
+    s.innerHTML += `<option value="${i}">${m}</option>`;
+    e.innerHTML += `<option value="${i}">${m}</option>`;
+  });
+  s.value = 0;
+  e.value = TOTAL - 1;
+  s.onchange = () => { startIdx = +s.value; refresh(); };
+  e.onchange = () => { endIdx = +e.value; refresh(); };
+}
+
+function setTimeRange(range) {
+  document.querySelectorAll(".time-quick-btn").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  endIdx = TOTAL - 1;
+  if (range === "3y") startIdx = Math.max(0, TOTAL - 37);
+  else if (range === "5y") startIdx = Math.max(0, TOTAL - 61);
+  else if (range === "10y") startIdx = Math.max(0, TOTAL - 121);
+  else startIdx = 0;
+  document.getElementById("startMonth").value = startIdx;
+  document.getElementById("endMonth").value = endIdx;
   refresh();
 }
 
 // ============================================================
 // Chart
 // ============================================================
-const DATA_TYPE_LABELS = { mom: "环比指数", yoy: "同比指数", fixed: "定基指数 (2023-01=100)" };
+const DT_LABELS = { mom: "环比指数", yoy: "同比指数", fixed: "定基指数 (2008-01=100)" };
 
 function buildChart() {
   const ctx = document.getElementById("mainChart").getContext("2d");
   if (chart) chart.destroy();
 
+  const months = ALL_MONTHS.slice(startIdx, endIdx + 1);
   const cities = [...selectedCities];
+
+  // When too many months, reduce point density
+  const showPoints = months.length <= 60;
+
   const datasets = cities.map((city, i) => ({
     label: city,
-    data: CITY_DATA[city][currentDataType],
+    data: getSlice(getSeries(city)),
     borderColor: COLORS[i % COLORS.length],
     backgroundColor: COLORS[i % COLORS.length] + "18",
-    borderWidth: 2.5,
-    pointRadius: 3,
-    pointHoverRadius: 6,
+    borderWidth: 2,
+    pointRadius: showPoints ? 2.5 : 0,
+    pointHoverRadius: 5,
     tension: 0.3,
     fill: false,
   }));
 
   chart = new Chart(ctx, {
     type: "line",
-    data: { labels: MONTHS, datasets },
+    data: { labels: months, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -528,7 +648,7 @@ function buildChart() {
       plugins: {
         legend: {
           position: "top",
-          labels: { usePointStyle: true, pointStyle: "circle", padding: 16, font: { size: 12 } },
+          labels: { usePointStyle: true, pointStyle: "circle", padding: 14, font: { size: 12 } },
         },
         tooltip: {
           backgroundColor: "rgba(30,41,59,.92)",
@@ -537,7 +657,7 @@ function buildChart() {
           padding: 12,
           cornerRadius: 8,
           callbacks: {
-            label: function(ctx) {
+            label(ctx) {
               const v = ctx.parsed.y;
               const diff = (v - 100).toFixed(1);
               const sign = diff > 0 ? "+" : "";
@@ -549,54 +669,57 @@ function buildChart() {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { font: { size: 11 }, maxRotation: 45 },
+          ticks: {
+            font: { size: 10 },
+            maxRotation: 45,
+            autoSkip: true,
+            maxTicksLimit: 24,
+          },
         },
         y: {
           grid: { color: "#f1f5f9" },
           ticks: { font: { size: 11 } },
-          title: { display: true, text: DATA_TYPE_LABELS[currentDataType], font: { size: 12 } },
+          title: { display: true, text: DT_LABELS[currentDataType], font: { size: 12 } },
         },
       },
     },
   });
-
-  // Add 100-baseline annotation line
-  if (currentDataType === "mom") {
-    chart.options.plugins.annotation = undefined; // simple: rely on grid
-  }
 }
 
 function switchDataType(type) {
   currentDataType = type;
-  document.querySelectorAll(".data-type-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.type === type);
-  });
+  document.querySelectorAll(".data-type-btn").forEach(btn =>
+    btn.classList.toggle("active", btn.dataset.type === type)
+  );
   buildChart();
   renderStats();
   renderTable();
 }
 
 // ============================================================
-// Stats cards
+// Stats
 // ============================================================
 function renderStats() {
   const grid = document.getElementById("statsGrid");
   grid.innerHTML = "";
   const cities = [...selectedCities];
-  if (cities.length === 0) {
+  if (!cities.length) {
     grid.innerHTML = '<div style="color:var(--text-secondary);font-size:14px;padding:12px;">请选择至少一个城市</div>';
     return;
   }
-
   cities.forEach((city, idx) => {
-    const mom = CITY_DATA[city].mom;
+    const mom = getSlice(getMom(city));
+    const yoy = getSlice(getYoy(city));
+    const fixed = getSlice(getFixed(city));
     const latest = mom[mom.length - 1];
-    const prev = mom[mom.length - 2];
+    const prev = mom.length > 1 ? mom[mom.length - 2] : latest;
     const avg = +(mom.reduce((a, b) => a + b, 0) / mom.length).toFixed(2);
     const max = Math.max(...mom);
     const min = Math.min(...mom);
-    const trend = latest >= 100 ? "up" : "down";
-    const yoyLatest = CITY_DATA[city].yoy[CITY_DATA[city].yoy.length - 1];
+    const yoyLatest = yoy[yoy.length - 1];
+    const fixedLatest = fixed[fixed.length - 1];
+    const fixedStart = fixed[0];
+    const cumChange = ((fixedLatest / fixedStart - 1) * 100).toFixed(1);
 
     const color = COLORS[idx % COLORS.length];
     const card = document.createElement("div");
@@ -606,76 +729,62 @@ function renderStats() {
       <div class="stat-row"><span class="stat-label">最新环比</span><span class="stat-value ${latest>=100?'val-up':'val-down'}">${latest} (${latest>=100?'+':''}${(latest-100).toFixed(1)}%)</span></div>
       <div class="stat-row"><span class="stat-label">上月环比</span><span class="stat-value ${prev>=100?'val-up':'val-down'}">${prev}</span></div>
       <div class="stat-row"><span class="stat-label">同比指数</span><span class="stat-value ${yoyLatest>=100?'val-up':'val-down'}">${yoyLatest}</span></div>
-      <div class="stat-row"><span class="stat-label">24月均值</span><span class="stat-value">${avg}</span></div>
-      <div class="stat-row"><span class="stat-label">最高 / 最低</span><span class="stat-value">${max} / ${min}</span></div>
+      <div class="stat-row"><span class="stat-label">区间均值</span><span class="stat-value">${avg}</span></div>
+      <div class="stat-row"><span class="stat-label">环比最高/最低</span><span class="stat-value">${max} / ${min}</span></div>
+      <div class="stat-row"><span class="stat-label">区间累计涨跌</span><span class="stat-value ${cumChange>=0?'val-up':'val-down'}">${cumChange>=0?'+':''}${cumChange}%</span></div>
     `;
     grid.appendChild(card);
   });
 }
 
 // ============================================================
-// Detail table
+// Table
 // ============================================================
 function renderTable() {
   const cities = [...selectedCities];
   const tabsEl = document.getElementById("tableTabs");
   const wrapEl = document.getElementById("tableWrap");
 
-  if (cities.length === 0) {
+  if (!cities.length) {
     tabsEl.innerHTML = "";
-    wrapEl.innerHTML = '<div style="color:var(--text-secondary);font-size:14px;padding:12px;">请选择城市查看详细数据</div>';
+    wrapEl.innerHTML = '<div style="color:var(--text-secondary);font-size:14px;padding:12px;">请选择城市查看数据</div>';
     return;
   }
-
-  // Tabs
   if (!tableCity || !selectedCities.has(tableCity)) tableCity = cities[0];
+
   tabsEl.innerHTML = cities.map(c =>
     `<div class="tab${c===tableCity?' active':''}" onclick="switchTableCity('${c}')">${c}</div>`
   ).join("");
 
-  // Table
-  const mom = CITY_DATA[tableCity].mom;
-  const yoy = CITY_DATA[tableCity].yoy;
-  const fixed = CITY_DATA[tableCity].fixed;
+  const months = ALL_MONTHS.slice(startIdx, endIdx + 1);
+  const mom = getSlice(getMom(tableCity));
+  const yoy = getSlice(getYoy(tableCity));
+  const fixed = getSlice(getFixed(tableCity));
 
-  let rows = MONTHS.map((m, i) => {
-    const momV = mom[i];
-    const momDiff = (momV - 100).toFixed(1);
-    const yoyV = yoy[i];
-    const yoyDiff = (yoyV - 100).toFixed(1);
-    const fixV = fixed[i];
+  const badge = v => {
+    const n = parseFloat(v);
+    if (n > 0) return `<span class="badge badge-up">+${v}%</span>`;
+    if (n < 0) return `<span class="badge badge-down">${v}%</span>`;
+    return `<span class="badge badge-flat">0.0%</span>`;
+  };
 
-    const badge = (v) => {
-      if (v > 0) return `<span class="badge badge-up">+${v}%</span>`;
-      if (v < 0) return `<span class="badge badge-down">${v}%</span>`;
-      return `<span class="badge badge-flat">0%</span>`;
-    };
+  const rows = months.map((m, i) => {
+    const md = (mom[i] - 100).toFixed(1);
+    const yd = (yoy[i] - 100).toFixed(1);
+    return `<tr><td>${m}</td><td>${mom[i]}</td><td>${badge(md)}</td><td>${yoy[i]}</td><td>${badge(yd)}</td><td>${fixed[i]}</td></tr>`;
+  }).reverse().join("");
 
-    return `<tr>
-      <td>${m}</td>
-      <td>${momV}</td>
-      <td>${badge(momDiff)}</td>
-      <td>${yoyV}</td>
-      <td>${badge(yoyDiff)}</td>
-      <td>${fixV}</td>
-    </tr>`;
-  }).reverse().join(""); // newest first
-
+  const typeLabel = housingType === "new" ? "新建住宅" : "二手住宅";
   wrapEl.innerHTML = `<table>
-    <thead><tr>
-      <th>月份</th><th>环比指数</th><th>环比涨跌</th><th>同比指数</th><th>同比涨跌</th><th>定基指数</th>
-    </tr></thead>
+    <thead><tr><th>月份</th><th>环比指数</th><th>环比涨跌</th><th>同比指数</th><th>同比涨跌</th><th>定基指数</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
 
-function switchTableCity(city) {
-  tableCity = city;
-  renderTable();
-}
+function switchTableCity(city) { tableCity = city; renderTable(); }
 
 // ============================================================
-// Refresh all
+// Refresh
 // ============================================================
 function refresh() {
   renderChips();
@@ -685,6 +794,7 @@ function refresh() {
 }
 
 // Init
+initTimeSelects();
 refresh();
 </script>
 </body>
